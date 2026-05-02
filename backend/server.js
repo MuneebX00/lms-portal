@@ -54,6 +54,7 @@ app.post("/api/auth/login", async (req, res) => {
     if (!user) return res.status(401).json({ message: "Invalid credentials" });
     const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) return res.status(401).json({ message: "Invalid credentials" });
+    await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
     return res.json({ user: toClientUser(user), token: `mock-jwt-token-${user.id}` });
   } catch (_err) {
     return res.status(500).json({ message: "Login failed" });
