@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -37,13 +37,16 @@ const adminNavItems = [
 export function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
     const pathname = usePathname();
-    const navItems = useMemo(() => {
+    // Always start with studentNavItems so server and client render identical HTML
+    const [navItems, setNavItems] = useState(studentNavItems);
+
+    useEffect(() => {
         try {
-            const storedUser = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+            const storedUser = localStorage.getItem("user");
             const user = storedUser ? JSON.parse(storedUser) : null;
-            return user?.role === "admin" ? adminNavItems : studentNavItems;
+            if (user?.role === "admin") setNavItems(adminNavItems);
         } catch {
-            return studentNavItems;
+            // keep studentNavItems default
         }
     }, []);
 

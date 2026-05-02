@@ -8,7 +8,7 @@ import { apiFetch } from "@/lib/api";
 
 export default function AttendancePage() {
     type AttendanceRow = { subject: string; total: number; attended: number; percentage: number; semester?: string };
-    const [semester, setSemester] = useState("Fall 2024");
+    const [semester, setSemester] = useState("");
     const [data, setData] = useState<AttendanceRow[]>([]);
     const [error, setError] = useState("");
 
@@ -25,8 +25,14 @@ export default function AttendancePage() {
         loadAttendance();
     }, []);
 
+    // Derive unique semesters directly from API data (uses exact DB format e.g. "Fall-2024")
+    const semesters = useMemo(
+        () => Array.from(new Set(data.map((r) => r.semester).filter(Boolean))).sort().reverse(),
+        [data]
+    );
+
     const filteredData = useMemo(
-        () => data.filter((row) => !semester || row.semester === semester),
+        () => (semester ? data.filter((row) => row.semester === semester) : data),
         [data, semester]
     );
 
@@ -64,8 +70,10 @@ export default function AttendancePage() {
                             value={semester}
                             onChange={(e) => setSemester(e.target.value)}
                         >
-                            <option>Fall 2024</option>
-                            <option>Spring 2024</option>
+                            <option value="">All Semesters</option>
+                            {semesters.map((s) => (
+                                <option key={s} value={s}>{s}</option>
+                            ))}
                         </select>
                     </div>
                 </CardHeader>

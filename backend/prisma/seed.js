@@ -200,7 +200,7 @@ async function main() {
 
   // ── 3.1 Demo student for quick login compatibility ──
   const demoStudentHash = await bcrypt.hash("password123", 10);
-  await prisma.user.create({
+  const aliKhanUser = await prisma.user.create({
     data: {
       email: "ali.khan@uaf.edu.pk",
       passwordHash: demoStudentHash,
@@ -214,6 +214,8 @@ async function main() {
           program: "BS Computer Science",
           currentSemester: 7,
           enrollmentYear: 2021,
+          expectedGradYear: 2025,
+          cgpa: randFloat(3.0, 3.8),
         },
       },
     },
@@ -341,6 +343,9 @@ async function main() {
       console.log(`  → ${(batch + 1) * BATCH_SIZE} students created...`);
   }
   console.log(`✅ 1000 students created.\n`);
+
+  // Include the demo student so they get enrollments, grades, attendance & fees
+  allStudents.push({ user: aliKhanUser, dept: "Computer Science", semester: 7, year: 2021, regId: "2021-ag-1234" });
 
   // ── 6. Enrollments + Marks + Grades ──
   console.log("📝 Creating enrollments, marks & grades (this takes a moment)...");
