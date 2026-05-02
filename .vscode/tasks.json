@@ -1,0 +1,141 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "docker-build",
+			"label": "docker-build",
+			"platform": "node",
+			"dockerBuild": {
+				"dockerfile": "${workspaceFolder}/backend/Dockerfile",
+				"context": "${workspaceFolder}/backend",
+				"pull": true
+			},
+			"node": {
+				"package": "${workspaceFolder}/backend/package.json"
+			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: release",
+			"dependsOn": [
+				"docker-build"
+			],
+			"platform": "node",
+			"node": {
+				"package": "${workspaceFolder}/backend/package.json"
+			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: debug",
+			"dependsOn": [
+				"docker-build"
+			],
+			"dockerRun": {
+				"env": {
+					"DEBUG": "*",
+					"NODE_ENV": "development"
+				}
+			},
+			"node": {
+				"package": "${workspaceFolder}/backend/package.json",
+				"enableDebugging": true
+			}
+		},
+		{
+			"label": "test-shell-exec",
+			"type": "shell",
+			"command": "powershell -NoProfile -Command \"Write-Host 'task-ok'\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "install-backend-frontend",
+			"type": "shell",
+			"command": "powershell -NoProfile -Command \"Set-Location 'C:/Users/Grace/Desktop/uaf-lms-portal-main/backend'; npm install; Set-Location 'C:/Users/Grace/Desktop/uaf-lms-portal-main/frontend'; npm install\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "install-backend",
+			"type": "shell",
+			"command": "powershell -NoProfile -Command \"Set-Location 'C:/Users/Grace/Desktop/uaf-lms-portal-main/backend'; npm install\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "verify-cwd",
+			"type": "shell",
+			"command": "powershell -NoProfile -Command \"Set-Location 'C:/Users/Grace/Desktop/uaf-lms-portal-main/backend'; Get-Location | Write-Host\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "verify-cwd-backslash",
+			"type": "shell",
+			"command": "powershell -NoProfile -Command \"cd 'C:\\Users\\Grace\\Desktop\\uaf-lms-portal-main\\backend'; Get-Location | Write-Host\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "verify-path",
+			"type": "shell",
+			"command": "powershell -NoProfile -Command \"Test-Path 'C:\\Users\\Grace\\Desktop\\uaf-lms-portal-main\\backend' | Write-Host\"",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "verify-shell-cd",
+			"type": "shell",
+			"command": "cd C:\\Users\\Grace\\Desktop\\uaf-lms-portal-main\\backend; pwd",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "install-backend-direct",
+			"type": "shell",
+			"command": "cd C:\\Users\\Grace\\Desktop\\uaf-lms-portal-main\\backend; npm install",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "install-frontend-direct",
+			"type": "shell",
+			"command": "cd C:\\Users\\Grace\\Desktop\\uaf-lms-portal-main\\frontend; npm install",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "run-backend",
+			"type": "shell",
+			"command": "cd C:\\Users\\Grace\\Desktop\\uaf-lms-portal-main\\backend; node server.js",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "run-frontend",
+			"type": "shell",
+			"command": "cd C:\\Users\\Grace\\Desktop\\uaf-lms-portal-main\\frontend; npm run dev",
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "git-status",
+			"type": "shell",
+			"command": "git status",
+			"isBackground": false
+		},
+		{
+			"label": "git-remote",
+			"type": "shell",
+			"command": "git remote -v",
+			"isBackground": false
+		},
+		{
+			"label": "git-add",
+			"type": "shell",
+			"command": "git add .",
+			"isBackground": false
+		}
+	]
+}
